@@ -107,26 +107,31 @@ Full details and experimental evidence are in `studies/web-search-methodology/`.
 
 #### Critical Rules (Violating These Caused a 7.1% Quality Drop in Testing)
 
-1. **NEVER state something as fact unless it came from a fetched source.** Do not fill gaps from training data. Mark unverified claims as "(unverified)".
-2. **Verify counts and specific details explicitly.** Don't assume from memory. Fetch and confirm.
-3. **Cross-reference across 2+ source domains.** Different sources contain different errors. One source is not enough.
+1. **NEVER state something as fact unless it came from a fetched source.** Do not fill gaps from training data. Mark unverified claims as "(unverified)". If multiple models or parametric knowledge agree without a fetched URL, mark it `(unverified — consensus only)`.
+2. **Verify counts and specific details explicitly.** Don't assume from memory. Fetch and confirm. Split general parent claims from specific child numbers so a retracted child detail does not corrupt the supported parent claim.
+3. **Cross-reference across 2+ independent source origins (`independence_group`).** Different sources contain different errors, and multiple secondary posts summarizing the same upstream paper or press release count as **1 source**, not 2+.
 4. **Do NOT stop at 1-2 fetches** for Tier 2+ questions. Testing showed this drops quality from ~93% to ~86%.
-5. **Write targeted WebFetch prompts.** WebFetch uses Haiku internally. Vague prompts ("summarize this page") waste extraction capacity. Specify exactly what data you need and what format.
+5. **Write targeted WebFetch prompts & score relevance.** WebFetch uses Haiku internally. Vague prompts ("summarize this page") waste extraction capacity. Specify exactly what data you need, and tag extracted source blocks in `sources/*.md` with `[RCS: 0-10, Primary/Secondary]` (prune `<=1`).
 
-#### For Tier 3 (Deep Research): hybrid pipeline
+#### For Tier 3 (Deep Research): hybrid pipeline (v2)
 
-Tested against the plain Tier 3 method and the deep-research skill in `studies/research-pipeline-hybrid-comparison/`. The hybrid gave the most usable output and the widest sourcing. The fixes in steps 4-6 address what it did worse (long, hard-to-read README; claim drift in the writing step).
+Tested against the plain Tier 3 method and the deep-research skill in `studies/research-pipeline-hybrid-comparison/`, and upgraded with the mechanical verification and context-hygiene guards from `studies/github-survey/`.
 
-1. **Proposal first.** Write `research_proposals/<slug>-YYYY-MM-DD.md` (prior, disconfirmer, rival hypotheses, kill criterion). Show it to the user before launching researchers.
+1. **Proposal first (with consequence tiers).** Write `research_proposals/<slug>-YYYY-MM-DD.md` (prior, disconfirmer, rival hypotheses, kill criterion, and `[context]` / `[finding]` / `[decision]` tags on Q1..Qn). Run `python3 scripts/find_prior.py --complete-only --file <proposal>` so unverified `in_progress` drafts never contaminate prior art. Show it to the user before launching researchers.
 2. **Parallel researchers.** Decompose into 2-5 sub-questions. Launch one researcher subagent (Sonnet, about 30 turns maximum) per sub-question in the background. Give each the proposal path, these R3 rules, and an output path in `sources/`.
-3. **Researcher budget.** Each researcher follows the Tier 2 steps with a cap of about 30 turns. A capped run returns partial and can be resumed. Without a cap, researchers ran 31-52 calls each for little extra gain.
+3. **Researcher budget & context hygiene.** Each researcher follows the Tier 2 steps with a cap of about 30 turns. A capped run returns partial and can be resumed.
+   - **Context-rot guard:** Write extracted facts + exact `[Label](URL) — accessed YYYY-MM-DD` citations + verbatim quotes to `sources/<part>.md` incrementally. Never bulk-read more than 5 raw step logs at once, and preserve exact domain terms and URLs across summaries. When aggregating structured JSON/CSV/code outputs, inject a deterministic schema manifest first.
    - **Trial rule (3 questions):** for a sub-question that surveys published studies, launch two Sonnet researchers with the same brief and separate output files. Together they cost about the same tokens as one Opus researcher and found as many sources. When the 10% quality guard fires, rerun that area once on Sonnet before switching to Opus, because Opus also went over 10% on 1 of 3 questions.
    - **Trial rule:** for a sub-question marked "partly" covered in the proposal, give the researcher the narrowed question and a cap of about 15 turns instead of 30. Don't add a "reuse repo notes" step to researcher briefs: in the A/B it saved 3% of tokens and copied a repo error into a headline.
 4. **Separate writer, answer first.** One writer subagent reads only `sources/*.md` and writes `README.md` (plus `ai-instructions.md` when there are setup steps). The README must:
    - open with a plain answer to the user's own questions, in the user's wording and order, not the proposal's Q-numbers
    - stay under about 3,500 words, with detail moved to other files
+   - include explicit unresolved uncertainties and rejected hypotheses in `## Known Gaps`
    - put the prior / disconfirmer / hypothesis audit in an appendix at the end
-5. **Faithfulness pass.** A fresh subagent re-checks every number, quote, and attribution in the draft against the `sources/` notes (and the cited page when the notes are unclear). It fixes or marks "(unverified)" anything that drifted. In testing, most unsupported claims came from the writing step, not the research. Any fact the writer or a researcher took from an earlier repo study, rather than a page fetched in this study, is marked `[repo: <path>]`. The checker re-checks every such fact against its original page, and treats it as unchecked even if the earlier study passed its own fact-check.
+5. **Mechanical gate (`scripts/verify_study.py`) + Patch-only faithfulness pass.**
+   - First, run `python3 scripts/verify_study.py <study-dir>`. It deterministically verifies YAML frontmatter (`G1`), zero ghost URLs between `README.md` and `sources/*.md` (`G2`), domain diversity (`G3`), verbatim quote matching $\ge 6$ words (`G4`), numerical token traceability (`G5`), and factual paragraph citation coverage (`G6`).
+   - Second, a fresh subagent re-checks every number, quote, `[decision]` claim, and attribution in the draft against the `sources/` notes (and the cited page when the notes are unclear). **Patch, Never Regenerate:** post-draft verification and polish passes are restricted to surgical `Edit` calls and must NEVER overwrite `README.md` with a full-file `Write` regeneration. Any fact the writer or a researcher took from an earlier repo study, rather than a page fetched in this study, is marked `[repo: <path>]` and re-checked against its original page.
+   - Re-run `python3 scripts/verify_study.py --strict <study-dir>` after patching to confirm all deterministic gates pass.
 6. **Gap fill (optional).** Launch 1-2 more researchers only for gaps the writer or checker named.
 
 #### Token use

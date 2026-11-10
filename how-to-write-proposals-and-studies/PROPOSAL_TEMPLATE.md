@@ -32,10 +32,15 @@ should be specific, have real build consequences, and surface *competing*
 traditions/options where they exist. Aims must be non-contingent — design each so
 it still yields something even if another fails. (FINER-frame where useful.)
 
-- **Q0 — (for discovery proposals) the inclusion test + stopping rule:** what
+Tag each question with its consequence tier (`[context]`, `[finding]`, or `[decision]`):
+- **`[decision]`** (high-stakes / build-blocking): requires $\ge 2$ independent source domains (`independence_group`) and live primary-URL verification during the fact-check pass.
+- **`[finding]`** (empirical synthesis): standard R3 cross-domain verification.
+- **`[context]`** (background framing): 1–2 authoritative sources sufficient.
+
+- **Q0 `[finding]` — (for discovery proposals) the inclusion test + stopping rule:** what
   counts as a valid X, and when is the enumeration done?
-- **Q1 — …**
-- **Q2 — …**
+- **Q1 `[decision]` — …**
+- **Q2 `[finding]` — …**
 
 Use **comparison tables** wherever traditions/options disagree; mark provisional
 taxonomies "candidate — confirm/expand during research."

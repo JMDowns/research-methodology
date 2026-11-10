@@ -21,7 +21,7 @@ import argparse, json, os, re, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, "scripts", ".cache", "find_prior_index.json")
-SKIP = {".git", "node_modules", "probe", "__pycache__", ".cache"}
+SKIP = {".git", "node_modules", "probe", "dl-ghidra", "__pycache__", ".cache"}
 URL_RE = re.compile(r"https?://[^\s)>\"'`\]]+")
 DATE_RE = re.compile(r"accessed\s+(\d{4}-\d{2}-\d{2})")
 
@@ -113,10 +113,14 @@ def load(rebuild):
     return build()
 
 
-def related(idx, query, k_studies=10, k_props=5):
+def related(idx, query, k_studies=10, k_props=5, complete_only=False):
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
-    keys = list(idx["studies"])
+    keys = [
+        s for s in idx["studies"]
+        if "/per-genre/" not in s
+        and (not complete_only or idx["studies"][s].get("status") == "complete")
+    ]
     docs = [idx["studies"][s]["text"] for s in keys] + [p["text"] for p in idx["proposals"]]
     vec = TfidfVectorizer(stop_words="english", ngram_range=(1, 2), min_df=1, sublinear_tf=True)
     X = vec.fit_transform(docs + [query])
@@ -133,6 +137,7 @@ def main():
     ap.add_argument("--file")
     ap.add_argument("--urls", nargs="*")
     ap.add_argument("--rebuild", action="store_true")
+    ap.add_argument("--complete-only", action="store_true", help="Exclude in_progress/draft studies from prior-art results (robust-llm-wiki gate)")
     a = ap.parse_args()
     idx = load(a.rebuild)
     text = " ".join(a.query)
@@ -142,12 +147,13 @@ def main():
         text += " " + t[:6000]
         urls += [clean(u) for u in URL_RE.findall(t)]
     if text.strip():
-        st, pr = related(idx, text)
+        st, pr = related(idx, text, complete_only=a.complete_only)
         print("## Closest existing studies\n")
         print("| Score | Study | Status, date | Source notes | Summary |\n|---|---|---|---|---|")
         for sc, s in st:
             d = idx["studies"][s]
-            print(f"| {sc:.2f} | `{s}/` | {d['status']}, {d['date']} | {d['notes']} files in `{s}/sources/` | {d['summary'][:160]} |")
+            status_label = d["status"] if d["status"] == "complete" else f"{d['status']} [UNVERIFIED DRAFT — do not cite]"
+            print(f"| {sc:.2f} | `{s}/` | {status_label}, {d['date']} | {d['notes']} files in `{s}/sources/` | {d['summary'][:160]} |")
         print("\n## Closest open proposals\n")
         for sc, p in pr:
             print(f"- {sc:.2f} `{p['path']}` — {p['summary'][:160] or p['title']}")

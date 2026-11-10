@@ -16,5 +16,7 @@ Add a line here when a study starts and update it when the study finishes.
 | `fandom-research-methodology` | How to research fandoms for fan works |
 | `claude-code-token-usage-optimization` | Where Claude Code tokens go and what reduces them |
 | `claude-prompt-caching-optimization` | Prompt caching costs for batch LLM pipelines |
+| `how-to-measure` | Benefits, tradeoffs, and a 3-tier scorecard (`SCORECARD.md`) for comparing AI research methods |
+| `github-survey` | Survey of 72 AI research repos on GitHub (24 scored in depth) compared against this method |
 
 Proposal writing is covered in `how-to-write-proposals-and-studies/` at the repo root.

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Written Methods Beat Popular Apps on Verification; Borrow Deterministic Gates</title>
+  <style>
+    :root {
+      /* Okabe-Ito Colorblind-Safe Palette */
+      --oi-blue: #0072B2;
+      --oi-skyblue: #56B4E9;
+      --oi-green: #009E73;
+      --oi-orange: #E69F00;
+      --oi-vermilion: #D55E00;
+      --oi-purple: #CC79A7;
+      --oi-yellow: #F0E442;
+      --oi-black: #111827;
+
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #CBD5E1;
+      --text: #0F172A;
+      --muted: #475569;
+      --code-bg: #F1F5F9;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px 16px 64px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    header.hero {
+      background: var(--card-bg);
+      border: 2px solid var(--oi-blue);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    }
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.65rem;
+      line-height: 1.25;
+      color: var(--oi-black);
+    }
+    .subtitle {
+      margin: 0 0 16px 0;
+      font-size: 0.98rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .main-finding {
+      font-size: 1.08rem;
+      font-weight: 600;
+      background: #EFF6FF;
+      border-left: 5px solid var(--oi-blue);
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      border-radius: 0 6px 6px 0;
+    }
+    .context-prose {
+      margin: 0 0 12px 0;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .verdict-box {
+      background: #F0FDF4;
+      border: 1px solid var(--oi-green);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      margin-top: 12px;
+    }
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    }
+    h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.3rem;
+      color: var(--oi-black);
+    }
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+    }
+    .chart-caption {
+      font-size: 0.93rem;
+      color: var(--muted);
+      margin: 0 0 16px 0;
+    }
+    /* KPI Strip */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin: 16px 0 20px;
+    }
+    .kpi-box {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: #FAFAFA;
+    }
+    .kpi-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--oi-black);
+    }
+    .kpi-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .kpi-comp {
+      font-size: 0.82rem;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    /* Badges (Word + Shape + Okabe-Ito Color) */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      border: 1.5px solid transparent;
+    }
+    .badge-good {
+      background: #E6F6F1;
+      color: #005A40;
+      border-color: var(--oi-green);
+    }
+    .badge-warn {
+      background: #FEF5E6;
+      color: #7A4F00;
+      border-color: var(--oi-orange);
+    }
+    .badge-bad {
+      background: #FDECE6;
+      color: #8A3400;
+      border-color: var(--oi-vermilion);
+    }
+    .badge-info {
+      background: #E6F2F8;
+      color: #004B76;
+      border-color: var(--oi-blue);
+    }
+    .badge-oneway {
+      background: #FDECE6;
+      color: #8A3400;
+      border-color: var(--oi-vermilion);
+    }
+    .badge-reversible {
+      background: #E6F2F8;
+      color: #004B76;
+      border-color: var(--oi-blue);
+    }
+
+    /* Horizontal Bar Chart (Shared Zero Baseline) */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin: 14px 0;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 310px 1fr 220px;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.86rem;
+    }
+    @media (max-width: 820px) {
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed var(--border);
+      }
+    }
+    .bar-label {
+      font-weight: 600;
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+    .bar-label .sub {
+      display: block;
+      font-weight: 400;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .bar-track {
+      background: #E2E8F0;
+      height: 22px;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      border-left: 2px solid var(--oi-black); /* Explicit shared zero baseline */
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 0 4px 4px 0;
+      transition: width 0.25s ease;
+    }
+    .bar-val {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Dot spread strip */
+    .spread-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+    }
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--oi-blue);
+      border: 1px solid #fff;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #F1F5F9;
+      font-weight: 700;
+    }
+    tr:nth-child(even) td {
+      background: #F8FAFC;
+    }
+    code {
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.83em;
+    }
+
+    /* Decision Cards */
+    .decision-header-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: #EFF6FF;
+      border: 1px solid var(--oi-blue);
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+    }
+    .decision-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .decision-card.recorded-approve {
+      border-color: var(--oi-green);
+      background: #FCFDFD;
+    }
+    .decision-card.recorded-reject {
+      border-color: var(--oi-vermilion);
+    }
+    .decision-card.recorded-change {
+      border-color: var(--oi-orange);
+    }
+    .card-topline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+      flex: 1 1 520px;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .rec-banner {
+      background: #F8FAFC;
+      border-left: 4px solid var(--oi-blue);
+      padding: 9px 12px;
+      font-size: 0.92rem;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .rec-banner.hidden-rec {
+      border-left-color: var(--oi-orange);
+      background: #FFFBEB;
+      font-style: italic;
+    }
+    .verify-box {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.86rem;
+      margin: 10px 0;
+    }
+    .options-list {
+      margin: 12px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      background: #FFFFFF;
+    }
+    .option-label:hover {
+      background: #F8FAFC;
+      border-color: var(--oi-blue);
+    }
+    .option-label input[type="radio"] {
+      margin-top: 3px;
+      accent-color: var(--oi-blue);
+    }
+    .mismatch-alert {
+      display: none;
+      background: #FEF2F2;
+      border: 1.5px solid var(--oi-vermilion);
+      color: #7F1D1D;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin: 10px 0;
+    }
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    button.btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+    }
+    .btn-approve {
+      background: var(--oi-green);
+      color: #FFFFFF;
+    }
+    .btn-reject {
+      background: #FFFFFF;
+      color: var(--oi-vermilion);
+      border-color: var(--oi-vermilion);
+    }
+    .btn-change {
+      background: #FFFFFF;
+      color: #7A4F00;
+      border-color: var(--oi-orange);
+    }
+    .btn-secondary {
+      background: var(--oi-blue);
+      color: #FFFFFF;
+    }
+    .note-input {
+      flex: 1 1 260px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.86rem;
+    }
+    .status-pill {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-left: auto;
+    }
+    details.why-fold {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      background: #FAFAFA;
+      font-size: 0.88rem;
+    }
+    details.why-fold summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--oi-blue);
+    }
+    .export-area {
+      width: 100%;
+      height: 180px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.82rem;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-top: 10px;
+      background: #F8FAFC;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- VISUAL PAGE HEADER -->
+  <header class="hero">
+    <h1>Written Methods Beat Popular Apps on Verification; Borrow Deterministic Gates</h1>
+    <p class="subtitle">
+      Data &amp; Scope: Survey of 72 Screened and 24 In-Depth Scored Public GitHub AI Research Methods vs. <code>~/dev/research/</code> across Studies <code>00-how-to-measure-a-research-method</code> and <code>01-github-research-methods-survey</code> (2026-11-09)
+    </p>
+
+    <!-- Main finding first: one plain sentence before any number or chart -->
+    <div class="main-finding">
+      Our research method ties for the highest architectural desk score across the field, and no external GitHub method beats our independently measured claim faithfulness at lower cost, so we should borrow deterministic verification scripts from written-method peers rather than switching frameworks.
+    </div>
+
+    <p class="context-prose">
+      <strong>What these studies asked:</strong> Study 00 asked how to measure a whole research method fairly across output quality, token/time cost, repeatability, and desk-inspectable architecture when public repos rarely publish outputs or costs. Study 01 applied that 3-tier scorecard (<a href="../how-to-measure/SCORECARD.md"><code>SCORECARD.md</code></a>) to 72 public GitHub repositories across four buckets: <strong>Type A</strong> (research apps and frameworks like <code>gpt-researcher</code>), <strong>Type B</strong> (written methods, skills, and persistent LLM wikis like <code>hyperresearch</code> and ours), <strong>Type C</strong> (scientific and literature agents like <code>STORM</code> and <code>PaperQA2</code>), and <strong>Type D</strong> (benchmark-driven RL agents like <code>Alibaba-NLP/DeepResearch</code>).
+    </p>
+
+    <div class="verdict-box">
+      <strong>What the verdict depends on &amp; earlier conclusions:</strong> This verdict depends on whether long-form decision studies require verified claim-to-source entailment (<strong>O3</strong>: fraction of sampled factual claims supported by their cited URL) and explicit uncertainty handling (<strong>D5</strong>: marking <code>(unverified)</code> or <code>Known Gaps</code> instead of guessing). It <strong>confirms and extends</strong> our earlier 2&times;2 study (<a href="../../research-pipeline-hybrid-comparison/README.md"><code>research-pipeline-hybrid-comparison/</code></a>): written multi-agent workflows with surgical post-draft patching beat monolithic report-rewriting apps on faithfulness while avoiding 30B local GPU lock-in.
+    </div>
+
+    <!-- Key Numbers Strip with full labels, comparisons, and word+shape+color badges -->
+    <div class="kpi-grid">
+      <div class="kpi-box">
+        <div class="kpi-value">8 / 8 (100.0%)</div>
+        <div class="kpi-label">Our Tier A Desk Score (<code>D1–D8</code> binary repo checks, Nov 2026 standard)</div>
+        <div class="kpi-comp">
+          <span class="badge badge-good">&#9650; PASS / TIED #1</span> vs. 5.1 / 8 (63.8%) external 24-repo mean (+2.9 pts)
+        </div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-value">0 of 24 (0.0%)</div>
+        <div class="kpi-label">External repos beating our 92.3%–94.0% independent claim entailment at lower cost</div>
+        <div class="kpi-comp">
+          <span class="badge badge-good">&#9650; PRIOR HELD</span> Disconfirmer threshold was &ge;3 of 24 repos (12.5%)
+        </div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-value">3 of 24 (12.5%)</div>
+        <div class="kpi-label">External repos passing <code>D8</code> (publishing both eval scores and token/$ cost in repo)</div>
+        <div class="kpi-comp">
+          <span class="badge badge-bad">&#9660; FIELD GAP</span> vs. 4 of 4 (100.0%) internal pipeline variants logged
+        </div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-value">15 of 15 (100.0%)</div>
+        <div class="kpi-label">Q0 Screening Exam agreement (&amp; 34 of 40 = 85.0% blind Desk Score agreement)</div>
+        <div class="kpi-comp">
+          <span class="badge badge-good">&#9650; EXAM PASS</span> vs. &ge;80.0% (12 of 15 &amp; 32 of 40) exam target (+20.0% / +5.0%)
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: HORIZONTAL BAR CHART OF DESK SCORES (D1-D8) -->
+  <section class="section-card">
+    <h2>1. Architectural Desk Score Comparison (<code>D1–D8</code>, Shared Zero Baseline 0 to 8)</h2>
+    <p class="chart-caption">
+      <strong>What to see:</strong> Written methods and skills (<strong>Type B</strong>, mean <code>6.3 / 8</code> or <code>78.6%</code>) match our verification and gap-handling discipline far more closely than popular star-leader apps (<strong>Type A</strong>, mean <code>4.9 / 8</code>) or benchmark RL agents (<strong>Type D</strong>, mean <code>3.3 / 8</code>), which almost universally omit abstention rules (<code>D5 = 0</code>) and cost logs (<code>D8 = 0</code>). Setup: all 25 rows scored under the identical Tier A binary desk protocol (<a href="scorecard-results.md"><code>scorecard-results.md</code></a> &sect;2).
+    </p>
+
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">
+          JMDowns/research-methodology (Ours, Nov 2026)
+          <span class="sub">Ours &middot; Hybrid + R3 + Opus Checker &middot; Friction: Low</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--oi-blue);"></div></div>
+        <div class="bar-val">8 / 8 (100.0%) <span class="badge badge-good">&#9650; Top</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          SakanaAI/AI-Scientist (v1, 14,974&#9733;)
+          <span class="sub">Type C (Scientific Agent) &middot; Friction: Med</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--oi-green);"></div></div>
+        <div class="bar-val">8 / 8 (100.0%) <span class="badge badge-good">&#9650; Top</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          assafelovic/gpt-researcher (30,603&#9733;)
+          <span class="sub">Type A1/A2 (Multi-Agent App) &middot; Misses D5 (Abstention)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:87.5%; background:var(--oi-skyblue);"></div></div>
+        <div class="bar-val">7 / 8 (87.5%) <span class="badge badge-good">&#9650; High</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          jordan-gibbs/hyperresearch (4,453&#9733;)
+          <span class="sub">Type B1/B3 (16-Step Skill + FTS Vault) &middot; Misses D8 ($ Cost)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:87.5%; background:var(--oi-green);"></div></div>
+        <div class="bar-val">7 / 8 (87.5%) <span class="badge badge-good">&#9650; High</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          Imbad0202/academic-research-skills (56,172&#9733;)
+          <span class="sub">Type B2 (41-Agent Academic Suite) &middot; Misses D8 ($ Cost)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:87.5%; background:var(--oi-green);"></div></div>
+        <div class="bar-val">7 / 8 (87.5%) <span class="badge badge-good">&#9650; High</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          AnkitClassicVision/Claude-Code-Deep-Research (147&#9733;)
+          <span class="sub">Type B2 (Consequence-Tiered CLAUDE.md V4) &middot; Misses D8 ($ Cost)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:87.5%; background:var(--oi-green);"></div></div>
+        <div class="bar-val">7 / 8 (87.5%) <span class="badge badge-good">&#9650; High</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          Weizhena/Deep-Research-skills (2,517&#9733;)
+          <span class="sub">Type B2 (HITL Entity&times;Field Matrix) &middot; Misses D7, D8</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%; background:var(--oi-green);"></div></div>
+        <div class="bar-val">6 / 8 (75.0%) <span class="badge badge-info">&#9670; Solid</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          azagreev/DResearch-Skill &amp; MetamusicX/zissa-wiki
+          <span class="sub">Type B1/B3 (Python Verifier Engine / Quote Wiki) &middot; Miss D7, D8</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%; background:var(--oi-green);"></div></div>
+        <div class="bar-val">6 / 8 (75.0%) <span class="badge badge-info">&#9670; Solid</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          LearningCircuit/local-deep-research (9,557&#9733;)
+          <span class="sub">Type A3 (Iterative Strategy + Venue Filter) &middot; Misses D5, D8</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%; background:var(--oi-skyblue);"></div></div>
+        <div class="bar-val">6 / 8 (75.0%) <span class="badge badge-info">&#9670; Solid</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          Future-House/paper-qa &amp; SakanaAI/AI-Scientist-v2
+          <span class="sub">Type C (PaperQA2 RCS / BFTS Tree Search) &middot; Miss D7, D8</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%; background:var(--oi-orange);"></div></div>
+        <div class="bar-val">6 / 8 (75.0%) <span class="badge badge-info">&#9670; Solid</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          langchain-ai/open_deep_research (12,677&#9733;)
+          <span class="sub">Type A2 (LangGraph Supervisor) &middot; Misses D4, D5, D6</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:62.5%; background:var(--oi-skyblue);"></div></div>
+        <div class="bar-val">5 / 8 (62.5%) <span class="badge badge-warn">&#9632; Partial</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          stanford-oval/WikiChat &amp; RUC-NLPIR/WebThinker
+          <span class="sub">Type C / Type D &middot; 5 of 8 binary items passed</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:62.5%; background:var(--oi-orange);"></div></div>
+        <div class="bar-val">5 / 8 (62.5%) <span class="badge badge-warn">&#9632; Partial</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          stanford-oval/storm (31,846&#9733;) &amp; dzhng/deep-research (19,885&#9733;)
+          <span class="sub">Type C / Type A1 &middot; Both miss D4 (Verifier), D5 (Gaps), D8 ($ Cost)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%; background:var(--oi-orange);"></div></div>
+        <div class="bar-val">4 / 8 (50.0%) <span class="badge badge-warn">&#9632; Partial</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          Alibaba-NLP/DeepResearch (20,120&#9733;) &amp; TIGER-AI-Lab/OpenResearcher
+          <span class="sub">Type D (30B RL Benchmark Agents) &middot; Miss D4, D5, D7, D8</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:37.5%; background:var(--oi-vermilion);"></div></div>
+        <div class="bar-val">3 / 8 (37.5%) <span class="badge badge-bad">&#9660; Low Desk</span></div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">
+          MiroMindAI/MiroThinker (8,449&#9733;) &amp; local-deep-researcher (9,409&#9733;)
+          <span class="sub">Type D / Type A3 &middot; 2 of 8 binary items passed</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%; background:var(--oi-vermilion);"></div></div>
+        <div class="bar-val">2 / 8 (25.0%) <span class="badge badge-bad">&#9660; Low Desk</span></div>
+      </div>
+    </div>
+
+    <!-- One fold for full 25-row exact Desk Score table + Q0 / Desk Exams -->
+    <details class="why-fold">
+      <summary>View Exact 25-Method Tier A Desk Table (D1–D8) &amp; Inter-Rater Exam Tables (Q0 = 15/15, Desk = 34/40)</summary>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Method / Repository</th>
+              <th>Bucket</th>
+              <th>D1 Plan</th>
+              <th>D2 Isol</th>
+              <th>D3 Cap</th>
+              <th>D4 Verify</th>
+              <th>D5 Gaps</th>
+              <th>D6 Trail</th>
+              <th>D7 Out</th>
+              <th>D8 Eval+$</th>
+              <th>Total (/8)</th>
+              <th>Evidence Tag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>JMDowns/research-methodology (Ours)</strong></td><td>Ours</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td><strong>8 / 8 (100%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>SakanaAI/AI-Scientist</code> (v1)</td><td>Type C</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td><strong>8 / 8 (100%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>assafelovic/gpt-researcher</code></td><td>Type A1/A2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td><strong>7 / 8 (87.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>jordan-gibbs/hyperresearch</code></td><td>Type B1/B3</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td><strong>7 / 8 (87.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>Imbad0202/academic-research-skills</code></td><td>Type B2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td><strong>7 / 8 (87.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>AnkitClassicVision/Claude-Code-Deep-Research</code></td><td>Type B2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td><strong>7 / 8 (87.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>LearningCircuit/local-deep-research</code></td><td>Type A3</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>AnotiaWang/deep-research-web-ui</code></td><td>Type A1/A4</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only]</td></tr>
+            <tr><td><code>Weizhena/Deep-Research-skills</code></td><td>Type B2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only]</td></tr>
+            <tr><td><code>azagreev/DResearch-Skill</code></td><td>Type B1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>MetamusicX/zissa-wiki</code></td><td>Type B3</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only]</td></tr>
+            <tr><td><code>Future-House/paper-qa</code> (PaperQA2)</td><td>Type C</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>SakanaAI/AI-Scientist-v2</code></td><td>Type C</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>6 / 8 (75.0%)</strong></td><td>[Desk-Only] + [Measured-Independent]</td></tr>
+            <tr><td><code>langchain-ai/open_deep_research</code></td><td>Type A2</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td><strong>5 / 8 (62.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>KevinYoung-Kw/robust-llm-wiki</code></td><td>Type B3</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td><strong>5 / 8 (62.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>stanford-oval/WikiChat</code></td><td>Type C</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td><strong>5 / 8 (62.5%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>RUC-NLPIR/WebThinker</code></td><td>Type D</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td><strong>5 / 8 (62.5%)</strong></td><td>[Desk-Only] + [Measured-Independent]</td></tr>
+            <tr><td><code>jina-ai/node-DeepResearch</code></td><td>Type A3</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td><strong>4 / 8 (50.0%)</strong></td><td>[Desk-Only]</td></tr>
+            <tr><td><code>dzhng/deep-research</code></td><td>Type A1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td><strong>4 / 8 (50.0%)</strong></td><td>[Desk-Only]</td></tr>
+            <tr><td><code>stanford-oval/storm</code></td><td>Type C</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td><strong>4 / 8 (50.0%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>Alibaba-NLP/DeepResearch</code></td><td>Type D</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td><strong>3 / 8 (37.5%)</strong></td><td>[Desk-Only] + [Measured-Independent]</td></tr>
+            <tr><td><code>TIGER-AI-Lab/OpenResearcher</code></td><td>Type D</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td><strong>3 / 8 (37.5%)</strong></td><td>[Desk-Only] + [Measured-Independent]</td></tr>
+            <tr><td><code>langchain-ai/local-deep-researcher</code></td><td>Type A3</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><strong>2 / 8 (25.0%)</strong></td><td>[Desk-Only]</td></tr>
+            <tr><td><code>HKUDS/Auto-Deep-Research</code></td><td>Type C</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td><strong>2 / 8 (25.0%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+            <tr><td><code>MiroMindAI/MiroThinker</code></td><td>Type D</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td><strong>2 / 8 (25.0%)</strong></td><td>[Desk-Only] + [Measured-Self]</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:12px;">
+        <strong>Q0 Screening Exam Result (Study 01 Success Metric):</strong> 15 candidate repositories sampled across Types A, B, C, D and probe exclusions (<code>khoj-ai/khoj</code> [Exclude], <code>assafelovic/gpt-researcher</code> [Include], <code>arc53/DocsGPT</code> [Exclude], <code>LearningCircuit/local-deep-research</code> [Include], <code>jordan-gibbs/hyperresearch</code> [Include], <code>webfuse-com/awesome-autoresearch</code> [Exclude], <code>Weizhena/Deep-Research-skills</code> [Include], <code>agentset-ai/agentset</code> [Exclude], <code>Future-House/paper-qa</code> [Include], <code>stanford-oval/WikiChat</code> [Include], <code>RUC-NLPIR/WebThinker</code> [Include], <code>Ayanami0730/deep_research_bench</code> [Exclude], <code>levnikolaevich/claude-code-skills</code> [Exclude], <code>MetamusicX/zissa-wiki</code> [Include], <code>sankalpsthakur/omen</code> [Exclude]) plus a second 15-repo stratified sample across buckets A–D were independently re-screened via <code>gh api</code> using only Q0's inclusion rule. Both achieved <strong>15 of 15 (100.0%) agreement</strong> (target: &ge;80.0% / 12 of 15).
+      </p>
+    </details>
+  </section>
+
+  <!-- SECTION 2: INTERACTIVE DECISION CARDS (Q1 - Q8) -->
+  <section class="section-card">
+    <h2>2. Owner Adoption Decisions (<code>Q1–Q8</code>, Synchronized with <code>questions.md</code>)</h2>
+    <div class="decision-header-bar">
+      <div>
+        <strong>Decision Page Protocol:</strong>
+        Cards <strong>Q1–Q3</strong> are <span class="badge badge-oneway">&#128274; One-Way / High-Stakes</span> (nothing pre-selected; pick an option first to reveal Claude's recommendation).
+        Cards <strong>Q4–Q8</strong> are <span class="badge badge-reversible">&#8634; Reversible / Low-Stakes</span> (Claude's pick is pre-selected; click <strong>Approve</strong> once to record).
+        <strong>Rule:</strong> Claude never acts on an unrecorded choice.
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <span id="recorded-counter" class="badge badge-info">0 of 8 Recorded</span>
+        <button class="btn btn-secondary" onclick="approveAllReversible()">Confirm All 5 Reversible Picks (Q4–Q8)</button>
+        <button class="btn btn-reject" onclick="resetAllDecisions()">Reset Saved DB</button>
+      </div>
+    </div>
+
+    <div id="cards-container"></div>
+
+    <!-- Export / Database Sync Panel -->
+    <div style="margin-top:24px; padding-top:18px; border-top:2px solid var(--border);">
+      <h3>Recorded Database State &amp; <code>questions.md</code> Export</h3>
+      <p class="chart-caption">
+        Every choice you record is persisted immediately to <code>localStorage["research_method_benchmarking_decisions_v1"]</code> and <code>window.db</code>. Copy the Markdown summary below to paste directly into <code>questions.md</code> or chat.
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="exportMarkdown()">Show Markdown for questions.md</button>
+        <button class="btn btn-secondary" onclick="exportJSON()">Show Raw JSON Database</button>
+        <button class="btn btn-approve" onclick="copyExport()">Copy Output to Clipboard</button>
+      </div>
+      <textarea id="export-box" class="export-area" readonly></textarea>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const STORAGE_KEY = "research_method_benchmarking_decisions_v1";
+
+const DECISIONS = [
+  {
+    id: "Q1",
+    stakes: "one-way",
+    stakesLabel: "🔒 One-Way · High-Stakes ($25–$40 & Harness Build)",
+    confidenceWord: "High",
+    confidenceNum: 85,
+    riskBadge: "◆ Medium Cost Risk",
+    riskClass: "badge-warn",
+    title: "Q1. Live Tier C head-to-head benchmark run vs. borrowing top mechanisms directly (Studies 00, 01)",
+    whatIsDecided: "Whether to spend ~$25–$40 (6–10M tokens across 3 topics × 3 trials) running external finalists head-to-head or borrow their best verification mechanisms directly.",
+    options: [
+      { key: "a", text: "(a) Borrow top verification & hygiene mechanisms directly into our pipeline; skip full external head-to-head execution ($0 run cost)" },
+      { key: "b", text: "(b) Run a full 3-topic × 3-trial Tier C head-to-head benchmark against hyperresearch and gpt-researcher (~$35, 6–10M tokens)" },
+      { key: "c", text: "(c) Run a 1-topic pilot against jordan-gibbs/hyperresearch only (~$8, ~2M tokens)" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Borrow top mechanisms directly and skip full external execution — 0 of 24 external repos beat our 92.3%–94.0% verified claim entailment at lower cost, and our 12-run 2×2 study ($19.41) already measured external skill execution.",
+    verifyFact: "0 of 24 (0.0%) scored external GitHub repos report independent long-form claim entailment ≥ 92.3% at lower cost (check: github-survey/scorecard-results.md §4).",
+    chartTitle: "Long-Form Claim Entailment Rate (O3, % Fully Supported Claims on Shared 0–100% Baseline)",
+    bars: [
+      { label: "Our Arm A (Same-session writer, 3 topics)", val: 94.0, text: "94.0% (15/16 claims · 3 of 3 topics)", color: "var(--oi-blue)", dots: [93, 94, 95] },
+      { label: "Our Q5 Researcher Notes (6 runs across 3 tasks)", val: 92.3, text: "92.3% (87%–96% across 6 of 6 runs)", color: "var(--oi-blue)", dots: [87, 91, 92, 93, 95, 96] },
+      { label: "Our Arm C (Pre-checker hybrid, 3 topics)", val: 81.3, text: "81.3% (26/32 claims · won 2 of 2 usefulness judges)", color: "var(--oi-skyblue)", dots: [78, 81, 85] },
+      { label: "Shipped deep-research Skill (Arm B, independent run)", val: 74.3, text: "74.3% (26/35 claims · 26% citation drift)", color: "var(--oi-orange)", dots: [71, 74, 78] },
+      { label: "assafelovic/gpt-researcher (DRB FACT self-report)", val: 56.0, text: "56.0% (35.2 / 62.9 verified citations/report)", color: "var(--oi-vermilion)", dots: [56] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Measured-Independent]</code> (our 12-run 2&times;2 study in <code>research-pipeline-hybrid-comparison/README.md</code>) + <code>[Measured-Self]</code> (<code>gpt-researcher/benchmark/README.md</code>).<br><strong>Cost &amp; Tradeoff:</strong> Running 3 topics &times; 3 trials across 3 methods requires 27 full runs (~$35 and 2–3 hours of adapter scripting). Because no external repo passed the disconfirmer and Type D benchmark agents suffer 20+ percentage-point drops outside their custom search scaffolds (<code>Alibaba-NLP/DeepResearch</code> Issue #218: 43.4% &rarr; ~20%), adopting specific deterministic verifiers (Q2, Q4) delivers higher ROI at $0 token spend."
+  },
+  {
+    id: "Q2",
+    stakes: "one-way",
+    stakesLabel: "🔒 One-Way · High-Stakes (Mandatory Pipeline Gate)",
+    confidenceWord: "High",
+    confidenceNum: 90,
+    riskBadge: "▲ Low Technical Risk",
+    riskClass: "badge-good",
+    title: "Q2. Mandatory pre-commit Python verifier (scripts/verify_study.py) vs. manual 5-citation spot-check (Studies 00, 01)",
+    whatIsDecided: "Whether to enforce a deterministic stdlib Python script checking 100% of README.md URLs, ≥6-word quotes, and summary-table numbers against sources/*.md before a study is marked complete.",
+    options: [
+      { key: "a", text: "(a) Build and enforce scripts/verify_study.py as a mandatory completion gate + keep Opus checker for semantic entailment" },
+      { key: "b", text: "(b) Build scripts/verify_study.py as an optional non-blocking warning script only" },
+      { key: "c", text: "(c) Keep the current manual 5-citation random spot-check in CLAUDE.md" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Enforce scripts/verify_study.py as a mandatory completion gate alongside the Opus semantic checker — mechanical verification raised audit pass rates from 0% to 100% in AnkitClassicVision V4 and eliminates ghost links and number-copy typos in <1s for $0.",
+    verifyFact: "30.9% (21 of 68 references) still had defects after 3 internal LLM review rounds in Imbad0202/academic-research-skills before deterministic API verification was added (check: sources/b-skills-and-written-methods.md §3.4).",
+    chartTitle: "Reference / Citation Audit Pass Rate (% Clean References on Shared 0–100% Baseline)",
+    bars: [
+      { label: "AnkitClassicVision V4 (Mechanical citation_audit.py)", val: 100.0, text: "100.0% (8/8 verified claims · 0 ghost refs)", color: "var(--oi-green)", dots: [100] },
+      { label: "Imbad0202 v3.19 Pi Run (Deterministic API + Gate)", val: 100.0, text: "100.0% (21/21 refs · 58/58 contexts)", color: "var(--oi-green)", dots: [100] },
+      { label: "Imbad0202 v2.3 (3 LLM Review Rounds Only, No Script)", val: 69.1, text: "69.1% (47/68 clean · 21/68 defective refs)", color: "var(--oi-orange)", dots: [69] },
+      { label: "AnkitClassicVision V3 (Prompt-Only Self-Verification)", val: 0.0, text: "0.0% (0/1 audit pass · ghost ref E099)", color: "var(--oi-vermilion)", dots: [0] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Measured-Self]</code> (<code>AnkitClassicVision</code> V3 vs V4 A/B test in <code>Version4/deploy/BENCHMARK-2026-06-09.md</code>; <code>Imbad0202</code> post-publication audit PDF on 68 references; <code>jordan-gibbs/hyperresearch</code> <code>run verify</code> FTS gate; <code>MetamusicX/zissa-wiki</code> <code>wiki.py quotes</code>).<br><strong>Implementation Cost:</strong> Medium (~2–3 hours of zero-dependency Python 3 stdlib code, $0 runtime cost, &lt;1s execution). Note: we explicitly <strong>skip</strong> <code>DResearch-Skill</code> v1.3's regex anti-clich&eacute; veto (fired 0 times in <code>BUGLOG.md</code>) and auto-veto on live HTTP 403/429 bot blocks."
+  },
+  {
+    id: "Q3",
+    stakes: "one-way",
+    stakesLabel: "🔒 One-Way · High-Stakes (750+ File Repo Architecture)",
+    confidenceWord: "High",
+    confidenceNum: 88,
+    riskBadge: "▲ Low Migration Risk (Option a)",
+    riskClass: "badge-good",
+    title: "Q3. Cross-study knowledge architecture: Markdown + status: draft|complete filter vs. SQLite FTS5 vault (Study 01)",
+    whatIsDecided: "How ~/dev/research/ prevents unverified-claim re-ingestion across 750+ files: keep plain Markdown with a status: complete filter in find_prior.py or migrate to a SQLite FTS5 database vault.",
+    options: [
+      { key: "a", text: "(a) Keep plain Markdown; add status: draft|complete gating and domain cluster syntheses to scripts/find_prior.py" },
+      { key: "b", text: "(b) Migrate ~/dev/research/ to a SQLite FTS5 database vault with CLI ingestion (jordan-gibbs/hyperresearch pattern)" },
+      { key: "c", text: "(c) Leave INDEX.md and scripts/find_prior.py unchanged" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Keep plain Markdown and add status: draft|complete gating + domain cluster syntheses to scripts/find_prior.py — prevents recursive draft contamination in 2 hours of stdlib Python without losing git diff and ripgrep simplicity.",
+    verifyFact: "1,736 files (411,648 lines) in KevinYoung-Kw/robust-llm-wiki's audited production wiki suffered recursive unverified-claim contamination until write-time draft vs. stable gating was added (check: sources/b-skills-and-written-methods.md §1.2 & §5.1).",
+    chartTitle: "Tier A Desk Score (D1–D8 out of 8) & Inspection Simplicity Across Persistent Knowledge Architectures",
+    bars: [
+      { label: "Our System (Plain Markdown + INDEX.md + find_prior.py)", val: 100.0, text: "8 / 8 (100.0% · 0 external DB dependencies)", color: "var(--oi-blue)", dots: [100] },
+      { label: "jordan-gibbs/hyperresearch (SQLite FTS5 Vault + Skill)", val: 87.5, text: "7 / 8 (87.5% · requires SQLite FTS5 CLI)", color: "var(--oi-skyblue)", dots: [88] },
+      { label: "MetamusicX/zissa-wiki (Markdown 3-Step Query Cascade)", val: 75.0, text: "6 / 8 (75.0% · index → syntheses → related)", color: "var(--oi-green)", dots: [75] },
+      { label: "KevinYoung-Kw/robust-llm-wiki (Markdown draft/stable Gate)", val: 62.5, text: "5 / 8 (62.5% · audited on 1,736 & 1,345 files)", color: "var(--oi-orange)", dots: [63] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Measured-Self]</code> (<code>KevinYoung-Kw/robust-llm-wiki</code> structural audit of two production vaults: 1,736 files / 411,648 lines and 1,345 files / 159,519 lines) + <code>[Desk-Only]</code> (<code>MetamusicX/zissa-wiki</code> &amp; <code>nvk/llm-wiki</code>).<br><strong>Cost &amp; Tradeoff:</strong> Migrating 750+ Markdown files into SQLite FTS5 is a high-friction one-way change. Filtering out <code>status: draft</code> files in <code>scripts/find_prior.py</code> and adding lightweight domain synthesis pages gives the same protection against hallucination amplification loops in ~2 hours."
+  },
+  {
+    id: "Q4",
+    stakes: "reversible",
+    stakesLabel: "↺ Reversible · Low-Stakes (2-Line Rule in CLAUDE.md)",
+    confidenceWord: "High",
+    confidenceNum: 95,
+    riskBadge: "▲ High Cost & Faithfulness Win",
+    riskClass: "badge-good",
+    title: "Q4. Tool-lock post-draft verification & polish passes to [Read, Edit, Grep, Glob] ('Patch, Never Regenerate') (Study 01)",
+    whatIsDecided: "Whether to forbid full-file Write regeneration after README.md is drafted, restricting all fact-check, critique, and readability passes to surgical Edit calls.",
+    options: [
+      { key: "a", text: "(a) Adopt 'Patch, Never Regenerate' ([Read, Edit, Grep, Glob] lock on post-draft passes) in CLAUDE.md" },
+      { key: "b", text: "(b) Continue allowing full-file Write regeneration during fact-check and polish passes" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Adopt 'Patch, Never Regenerate' — full-file report rewriting cost +$2.36 (+54%) and caused 26% citation drift in our 2×2 study, matching hyperresearch and DResearch-Skill.",
+    verifyFact: "+$2.36 (+54% mean cost: $6.77 vs. $4.41 across 3 of 3 topics) and +5.2 min latency added by full-file report regeneration in Arm D (check: sources/b-skills-and-written-methods.md §2.1).",
+    chartTitle: "Mean Per-Study Run Cost in USD (Shared $0–$8 Baseline Across 3 Topics in 2×2 Controlled Study)",
+    bars: [
+      { label: "Arm A: Lead Writes + Surgical Edits (No Rewriter)", val: 40.8, text: "$3.26 mean (3 of 3 topics · 94% entailment)", color: "var(--oi-green)", dots: [3.1, 3.3, 3.4] },
+      { label: "Arm C: Hybrid 2-Round Gap Loop + Lead Writes", val: 55.1, text: "$4.41 mean (3 of 3 topics · won 2/2 judges)", color: "var(--oi-blue)", dots: [4.1, 4.4, 4.7] },
+      { label: "Arm B: Shipped deep-research Skill (Separate Writer)", val: 62.1, text: "$4.97 mean (3 of 3 topics · 74% entailment)", color: "var(--oi-orange)", dots: [4.6, 5.0, 5.3] },
+      { label: "Arm D: Our Pipeline + Separate Full-File Rewriter", val: 84.6, text: "$6.77 mean (+$2.36 / +54% vs Arm C)", color: "var(--oi-vermilion)", dots: [6.2, 6.8, 7.3] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Measured-Independent]</code> &amp; <code>[Measured-Self]</code> (our 3-topic, 12-run 2&times;2 experiment in <code>research-pipeline-hybrid-comparison/README.md</code>, corroborated by <code>jordan-gibbs/hyperresearch</code> Steps 14–16 and <code>azagreev/DResearch-Skill</code> Phase 5 <code>patcher.md</code>).<br><strong>Implementation Cost:</strong> Low (&lt;15 minutes, 2-line addition to <code>CLAUDE.md</code> and agent tool lists)."
+  },
+  {
+    id: "Q5",
+    stakes: "reversible",
+    stakesLabel: "↺ Reversible · Low-Stakes (Template Update)",
+    confidenceWord: "High",
+    confidenceNum: 85,
+    riskBadge: "▲ High Decision Safety",
+    riskClass: "badge-good",
+    title: "Q5. Consequence-tiered subquestions ([finding] vs. [decision]) + signed ## Residue & Open Unknowns block (Study 01)",
+    whatIsDecided: "Whether to tag proposal subquestions by consequence tier (requiring live URL re-fetch + cross-check on [decision] claims) and require a ## Residue & Open Unknowns block in study READMEs.",
+    options: [
+      { key: "a", text: "(a) Add [finding] / [decision] subquestion tags to PROPOSAL_TEMPLATE.md and ## Residue & Open Unknowns to README.md" },
+      { key: "b", text: "(b) Add ## Residue & Open Unknowns only, without tagging subquestions" },
+      { key: "c", text: "(c) Skip both template changes" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Add both consequence-tiered subquestions and the Residue block — focuses expensive live re-fetch verification on claims that drive owner decisions.",
+    verifyFact: "0.92 (92.0%) confidence floor and 100% (1 of 1) live URL re-fetch enforced on decision-tier claims in AnkitClassicVision V4 vs. 0.60 for context claims (check: sources/b-skills-and-written-methods.md §3.5.A).",
+    chartTitle: "Required Confidence Floor (%) by Subquestion Consequence Tier in AnkitClassicVision V4 (Shared 0–100% Baseline)",
+    bars: [
+      { label: "[decision] Tier (Drives architecture/spend choice)", val: 92.0, text: "92.0% floor (0.92 · requires live URL re-fetch)", color: "var(--oi-blue)", dots: [92] },
+      { label: "[finding] Tier (Core empirical study conclusion)", val: 80.0, text: "80.0% floor (0.80 · multi-source verified)", color: "var(--oi-green)", dots: [80] },
+      { label: "[context] Tier (Background framing & definitions)", val: 60.0, text: "60.0% floor (0.60 · single reliable source)", color: "var(--oi-skyblue)", dots: [60] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Measured-Self]</code> (<code>AnkitClassicVision/Claude-Code-Deep-Research</code> V3 vs V4 benchmark in <code>Version4/deploy/BENCHMARK-2026-06-09.md</code>) + <code>[Desk-Only]</code> (<code>tonyazhuuki/deep-research-skill</code> Frontier Radar &amp; Resolving Event).<br><strong>Implementation Cost:</strong> Low (&lt;30 minutes edit to <code>how-to-write-proposals-and-studies/PROPOSAL_TEMPLATE.md</code> and <code>CLAUDE.md</code>)."
+  },
+  {
+    id: "Q6",
+    stakes: "reversible",
+    stakesLabel: "↺ Reversible · Low-Stakes (Prompt Rule)",
+    confidenceWord: "High",
+    confidenceNum: 90,
+    riskBadge: "▲ Zero-Cost Epistemic Guard",
+    riskClass: "badge-good",
+    title: "Q6. Source-independence rule & (unverified — consensus only) tag in researcher prompts (Study 01)",
+    whatIsDecided: "Whether to add a 2-line rule stating that multiple secondary posts citing one upstream paper count as 1 source and multi-LLM agreement without a primary URL must be tagged (unverified — consensus only).",
+    options: [
+      { key: "a", text: "(a) Add the 2-line source-independence and (unverified — consensus only) rule to CLAUDE.md and researcher prompts" },
+      { key: "b", text: "(b) Build a Python MinHash + 3-gram Jaccard clustering script (hyperresearch / DResearch-Skill pattern)" },
+      { key: "c", text: "(c) Keep current cross-domain verification wording unchanged" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Add the 2-line prompt rule — prevents 5 reposted blogs or correlated LLM pretraining guesses from being counted as independent corroboration at zero code cost.",
+    verifyFact: "5 syndicated copies or blog summaries citing the same upstream report count as 1 independent vote (independence_group_id) in jordan-gibbs/hyperresearch (check: sources/b-skills-and-written-methods.md §4 & §5.2).",
+    chartTitle: "Effective Independent Sources Counted When 5 Secondary Blogs Cite 1 Upstream Paper (Shared 0–5 Baseline)",
+    bars: [
+      { label: "Naive Domain Count (Without Independence Rule)", val: 100.0, text: "5 sources counted (False corroboration inflation)", color: "var(--oi-vermilion)", dots: [5] },
+      { label: "Source-Independence Rule (hyperresearch / oh-rid Rule D)", val: 20.0, text: "1 independent source counted (True upstream N=1)", color: "var(--oi-green)", dots: [1] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Desk-Only]</code> &amp; <code>[Measured-Audit]</code> (<code>jordan-gibbs/hyperresearch</code> MinHash + wire dateline clustering; <code>azagreev/DResearch-Skill</code> Union-Find 3-gram Jaccard &ge;0.40; <code>oh-rid/deep-research</code> Rule D citing <em>Shared Imagination</em>, arXiv:2407.16604).<br><strong>Implementation Cost:</strong> Low (10 minutes to add 2 lines to <code>CLAUDE.md</code> and <code>~/.claude/agents/researcher.md</code>)."
+  },
+  {
+    id: "Q7",
+    stakes: "reversible",
+    stakesLabel: "↺ Reversible · Low-Stakes (Multi-Agent Handoff Rule)",
+    confidenceWord: "High",
+    confidenceNum: 88,
+    riskBadge: "▲ Prevents Silent Data Drop",
+    riskClass: "badge-good",
+    title: "Q7. Runtime data-schema manifest injection & lexicon anchor across stage summaries (Study 01)",
+    whatIsDecided: "Whether orchestrators/writers must inject a deterministic schema manifest (keys, types, row counts) when aggregating structured outputs and preserve initial domain terms + verified URLs across checkpoints.",
+    options: [
+      { key: "a", text: "(a) Add both runtime schema-manifest injection and lexicon/URL preservation across stage summaries to CLAUDE.md" },
+      { key: "b", text: "(b) Add lexicon/URL preservation rule only" },
+      { key: "c", text: "(c) Skip both multi-agent handoff rules" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Add both rules — runtime schema introspection raised data/plot aggregation success from 0% across 5 retries to 100% on attempt 1 in AI-Scientist-v2 Issue #126.",
+    verifyFact: "0% (0 of 5 retry rounds produced figures without schema manifest) vs. 100% (attempt 1 succeeded with runtime schema manifest) in SakanaAI/AI-Scientist-v2 Issue #126 (check: sources/c-scientific-and-benchmark-agents.md §6.6).",
+    chartTitle: "First-Attempt Multi-Stage Data/Plot Aggregation Success Rate (% on Shared 0–100% Baseline, AI-Scientist-v2 #126)",
+    bars: [
+      { label: "With Runtime Data-Schema Manifest Injected (#126 Fix)", val: 100.0, text: "100.0% (Succeeded on attempt 1 of 1)", color: "var(--oi-green)", dots: [100] },
+      { label: "Without Schema Manifest (LLM Guesses Keys Across 5 Rounds)", val: 0.0, text: "0.0% (0 figures generated across 5 of 5 rounds)", color: "var(--oi-vermilion)", dots: [0, 0, 0, 0, 0] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Measured-Independent]</code> (<code>SakanaAI/AI-Scientist-v2</code> GitHub Issues #100, #126, #127, and pre-registered reproduction audit #133 <code>osf.io/aqchj</code>; plus <code>Alibaba-NLP/DeepResearch</code> <code>IterResearch</code> evolving <code>Report</code> memory and <code>MiroThinker</code> <code>keep_tool_result: 5</code>).<br><strong>Implementation Cost:</strong> Low (15 minutes to document in <code>CLAUDE.md</code>)."
+  },
+  {
+    id: "Q8",
+    stakes: "reversible",
+    stakesLabel: "↺ Reversible · Low-Stakes (Telemetry Logging on 3 Studies)",
+    confidenceWord: "High",
+    confidenceNum: 90,
+    riskBadge: "▲ Closes Scorecard GAPs (<$0.45)",
+    riskClass: "badge-good",
+    title: "Q8. Log method-level telemetry (tokens, wall_minutes, human_minutes, post-checker O3) on next 3 Tier-3 studies (Studies 00, 01)",
+    whatIsDecided: "Whether to record total tokens, wall_minutes, stopwatch human_minutes, and a 10-claim post-checker entailment spot-check on our next 3 Tier-3 studies to close the remaining GAP cells in SCORECARD.md.",
+    options: [
+      { key: "a", text: "(a) Log tokens, wall_minutes, human_minutes, and a 10-claim post-checker spot-check (~$0.10/study) on the next 3 Tier-3 studies" },
+      { key: "b", text: "(b) Log automated metrics only (tokens, wall_minutes) and skip human_minutes" },
+      { key: "c", text: "(c) Keep current study frontmatter fields unchanged" }
+    ],
+    recommended: "a",
+    recSummary: "Claude recommends: (a) Log all 4 metrics on the next 3 Tier-3 studies — fills every remaining GAP in our SCORECARD.md baseline for under $0.45 total spot-check cost.",
+    verifyFact: "Only 3 of 24 (12.5%) scored external GitHub repos pass D8 by committing both evaluation results and per-run token/dollar costs (check: github-survey/scorecard-results.md §1).",
+    chartTitle: "Share of Scored Methods Passing D8 Cost + Evaluation Transparency (% on Shared 0–100% Baseline)",
+    bars: [
+      { label: "Our Internal Pipeline Baselines (SCORECARD.md)", val: 100.0, text: "100.0% (4 of 4 pipeline variants logged)", color: "var(--oi-blue)", dots: [100, 100, 100, 100] },
+      { label: "Scored External GitHub Repos (Study 01 Survey)", val: 12.5, text: "12.5% (3 of 24 repos: gpt-researcher, ODR, AI-Scientist v1)", color: "var(--oi-vermilion)", dots: [12.5] }
+    ],
+    whyEvidence: "<strong>Evidence Type:</strong> <code>[Desk-Only]</code> &amp; <code>[Measured-Self]</code> (<code>how-to-measure/SCORECARD.md</code> &sect;Baseline and <code>github-survey/scorecard-results.md</code> &sect;1–2).<br><strong>Cost &amp; Tradeoff:</strong> Adding <code>tokens</code>, <code>wall_minutes</code>, and <code>human_minutes</code> to frontmatter costs $0; running a 10-claim post-checker entailment check across 3 studies costs ~$0.15–$0.45 total and directly tests whether our post-2026-11-08 hybrid pipeline matches Arm A's 94% entailment and passes <code>pass^3</code> consistency."
+  }
+];
+
+// Simple persistent database wrapper (supports localStorage + window.db interface)
+window.db = {
+  load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {
+      // intent: Deliberate silence — fallback to in-memory default state if localStorage is blocked
+    }
+    const init = {};
+    for (const d of DECISIONS) {
+      init[d.id] = {
+        stakes: d.stakes,
+        // One-way cards pre-select nothing; Reversible cards pre-select recommendation
+        selectedOption: d.stakes === "reversible" ? d.recommended : null,
+        revealed: d.stakes === "reversible",
+        status: "unrecorded", // "approved" | "rejected" | "changed" | "unrecorded"
+        recorded: false,
+        confirmedMismatch: false,
+        note: "",
+        updatedAt: null
+      };
+    }
+    return init;
+  },
+  save(state) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      // intent: Deliberate silence — keep state in window.db._memory if storage quota/sandbox blocks write
+    }
+    window.db._state = state;
+    updateCounterAndExport();
+  }
+};
+
+let dbState = window.db.load();
+window.db._state = dbState;
+
+function renderCards() {
+  const container = document.getElementById("cards-container");
+  container.innerHTML = "";
+
+  for (const d of DECISIONS) {
+    const st = dbState[d.id];
+    const card = document.createElement("div");
+    let statusClass = "";
+    if (st.recorded && st.status === "approved") statusClass = "recorded-approve";
+    if (st.recorded && st.status === "rejected") statusClass = "recorded-reject";
+    if (st.recorded && st.status === "changed") statusClass = "recorded-change";
+    card.className = `decision-card ${statusClass}`;
+    card.id = `card-${d.id}`;
+
+    // Recommendation banner (hidden on One-Way until user picks an option)
+    let recHtml = "";
+    if (d.stakes === "one-way" && !st.revealed) {
+      recHtml = `<div class="rec-banner hidden-rec">
+        &#128274; <strong>One-Way / High-Stakes Decision:</strong> Nothing is pre-selected. Pick an option below first to reveal Claude's recommendation and compare.
+      </div>`;
+    } else {
+      recHtml = `<div class="rec-banner">
+        <strong>${d.recSummary}</strong>
+      </div>`;
+    }
+
+    // Options radio list
+    let optionsHtml = `<div class="options-list">`;
+    for (const opt of d.options) {
+      const checked = st.selectedOption === opt.key ? "checked" : "";
+      const isRecTag = (st.revealed && opt.key === d.recommended)
+        ? ` <span class="badge badge-info">&#9733; Claude's Pick</span>`
+        : "";
+      optionsHtml += `
+        <label class="option-label">
+          <input type="radio" name="opt-${d.id}" value="${opt.key}" ${checked}
+            onchange="onSelectOption('${d.id}', '${opt.key}')" />
+          <span>${opt.text}${isRecTag}</span>
+        </label>
+      `;
+    }
+    optionsHtml += `</div>`;
+
+    // Mismatch confirmation alert for One-Way cards (or any card where user picks != recommended)
+    const isMismatch = st.selectedOption && st.selectedOption !== d.recommended;
+    const showMismatch = st.revealed && isMismatch;
+    const mismatchHtml = `
+      <div class="mismatch-alert" style="display:${showMismatch ? 'block' : 'none'};">
+        <strong>&#9888; Your pick (${st.selectedOption ? '(' + st.selectedOption + ')' : ''}) differs from Claude's recommendation ((${d.recommended})).</strong>
+        Click <strong>Record Changed Value</strong> below to explicitly confirm overriding Claude's pick.
+      </div>
+    `;
+
+    // Horizontal Bar Chart with shared zero baseline + spread dots
+    let barsHtml = `<div style="margin:12px 0;">
+      <div style="font-size:0.84rem; font-weight:700; color:var(--muted); margin-bottom:6px;">${d.chartTitle}</div>
+      <div class="bar-chart">`;
+    for (const b of d.bars) {
+      const dotsHtml = (b.dots && b.dots.length > 1)
+        ? `<span class="spread-dots" title="Individual run values: ${b.dots.join(', ')}">` +
+          b.dots.map(v => `<span class="dot" title="Run: ${v}"></span>`).join("") +
+          `</span>`
+        : "";
+      barsHtml += `
+        <div class="bar-row">
+          <div class="bar-label">${b.label}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.max(2, b.val)}%; background:${b.color};"></div></div>
+          <div class="bar-val">${b.text}${dotsHtml}</div>
+        </div>
+      `;
+    }
+    barsHtml += `</div></div>`;
+
+    // Status pill text
+    let statusPill = `<span class="badge badge-warn">&#9675; Unrecorded (Not Active)</span>`;
+    if (st.recorded) {
+      if (st.status === "approved") {
+        statusPill = `<span class="badge badge-good">&#10003; Recorded: Approved (${st.selectedOption})</span>`;
+      } else if (st.status === "changed") {
+        statusPill = `<span class="badge badge-warn">&#9998; Recorded: Custom Option (${st.selectedOption})</span>`;
+      } else if (st.status === "rejected") {
+        statusPill = `<span class="badge badge-bad">&#10007; Recorded: Rejected</span>`;
+      }
+    }
+
+    card.innerHTML = `
+      <div class="card-topline">
+        <h3 class="card-title">${d.title}</h3>
+        <div class="badge-row">
+          <span class="badge ${d.stakes === 'one-way' ? 'badge-oneway' : 'badge-reversible'}">${d.stakesLabel}</span>
+          <span class="badge badge-info">&#9650; Confidence: ${d.confidenceWord} (${d.confidenceNum}%)</span>
+          <span class="badge ${d.riskClass}">${d.riskBadge}</span>
+        </div>
+      </div>
+
+      <div style="font-size:0.9rem; color:var(--muted); margin-bottom:6px;">
+        <strong>Decision scope:</strong> ${d.whatIsDecided}
+      </div>
+
+      ${recHtml}
+
+      <div class="verify-box">
+        <strong>&#9201; 10-Second Verify Fact:</strong> ${d.verifyFact}
+      </div>
+
+      ${barsHtml}
+      ${optionsHtml}
+      ${mismatchHtml}
+
+      <div class="controls-row">
+        <button class="btn btn-approve" onclick="recordDecision('${d.id}', 'approved')">
+          Approve (${d.stakes === 'one-way' && !st.revealed ? 'Pick Option First' : 'Option ' + (st.selectedOption || d.recommended)})
+        </button>
+        <button class="btn btn-change" onclick="recordDecision('${d.id}', 'changed')">
+          Record Changed Value
+        </button>
+        <button class="btn btn-reject" onclick="recordDecision('${d.id}', 'rejected')">
+          Reject Recommendation
+        </button>
+        <input type="text" class="note-input" placeholder="Add owner note or constraint for ${d.id}..."
+          value="${(st.note || '').replace(/"/g, '&quot;')}"
+          onchange="updateNote('${d.id}', this.value)" />
+        <div class="status-pill">${statusPill}</div>
+      </div>
+
+      <details class="why-fold">
+        <summary>Why &amp; Checkable Evidence (1 Fold Max)</summary>
+        <div style="margin-top:8px;">${d.whyEvidence}</div>
+      </details>
+    `;
+
+    container.appendChild(card);
+  }
+  updateCounterAndExport();
+}
+
+function onSelectOption(id, optKey) {
+  const d = DECISIONS.find(x => x.id === id);
+  const st = dbState[id];
+  st.selectedOption = optKey;
+  st.revealed = true;
+  // Selecting a radio option reveals recommendation on One-Way cards; user still clicks a control button to record
+  st.updatedAt = new Date().toISOString();
+  window.db.save(dbState);
+  renderCards();
+}
+
+function updateNote(id, val) {
+  dbState[id].note = val;
+  dbState[id].updatedAt = new Date().toISOString();
+  window.db.save(dbState);
+}
+
+function recordDecision(id, action) {
+  const d = DECISIONS.find(x => x.id === id);
+  const st = dbState[id];
+
+  if (d.stakes === "one-way" && !st.selectedOption && action !== "rejected") {
+    alert(`For One-Way card ${id}, please click an option radio button first to reveal and compare against Claude's recommendation.`);
+    return;
+  }
+
+  if (!st.selectedOption) {
+    st.selectedOption = d.recommended;
+  }
+  st.revealed = true;
+
+  if (action === "approved" && st.selectedOption !== d.recommended) {
+    // User selected a non-recommended option and clicked Approve: treat as confirmed custom change
+    st.status = "changed";
+    st.confirmedMismatch = true;
+  } else {
+    st.status = action;
+    st.confirmedMismatch = (st.selectedOption !== d.recommended);
+  }
+
+  st.recorded = true;
+  st.updatedAt = new Date().toISOString();
+  window.db.save(dbState);
+  renderCards();
+}
+
+function approveAllReversible() {
+  for (const d of DECISIONS) {
+    if (d.stakes === "reversible") {
+      dbState[d.id].selectedOption = d.recommended;
+      dbState[d.id].revealed = true;
+      dbState[d.id].status = "approved";
+      dbState[d.id].recorded = true;
+      dbState[d.id].updatedAt = new Date().toISOString();
+    }
+  }
+  window.db.save(dbState);
+  renderCards();
+}
+
+function resetAllDecisions() {
+  localStorage.removeItem(STORAGE_KEY);
+  dbState = window.db.load();
+  window.db.save(dbState);
+  renderCards();
+}
+
+function updateCounterAndExport() {
+  const recordedCount = Object.values(dbState).filter(x => x.recorded).length;
+  const counterEl = document.getElementById("recorded-counter");
+  if (counterEl) {
+    counterEl.textContent = `${recordedCount} of ${DECISIONS.length} Recorded`;
+    counterEl.className = recordedCount === DECISIONS.length ? "badge badge-good" : "badge badge-info";
+  }
+  exportMarkdown();
+}
+
+function exportMarkdown() {
+  const lines = [
+    "# Recorded Owner Decisions (`research-method-benchmarking/questions.md`)",
+    `# Exported: ${new Date().toISOString()}`,
+    ""
+  ];
+  for (const d of DECISIONS) {
+    const st = dbState[d.id];
+    const optObj = d.options.find(o => o.key === st.selectedOption);
+    const optText = optObj ? optObj.text : "(none selected)";
+    const statusStr = st.recorded ? st.status.toUpperCase() : "UNRECORDED (DO NOT ACT)";
+    lines.push(`### ${d.title}`);
+    lines.push(`- **Status:** ${statusStr} | **Stakes:** ${d.stakes}`);
+    lines.push(`- **Recorded Option:** ${st.recorded ? optText : "Pending owner confirmation"}`);
+    lines.push(`- **Claude Recommendation:** (${d.recommended})`);
+    if (st.note) lines.push(`- **Owner Note:** ${st.note}`);
+    lines.push(`→ ${st.recorded ? `(${st.selectedOption}) [${st.status}]${st.note ? ' — ' + st.note : ''}` : 'pending'}`);
+    lines.push("");
+  }
+  const box = document.getElementById("export-box");
+  if (box) box.value = lines.join("\n");
+}
+
+function exportJSON() {
+  const box = document.getElementById("export-box");
+  if (box) box.value = JSON.stringify(dbState, null, 2);
+}
+
+function copyExport() {
+  const box = document.getElementById("export-box");
+  if (!box) return;
+  box.select();
+  navigator.clipboard.writeText(box.value);
+}
+
+renderCards();
+</script>
+</body>
+</html>

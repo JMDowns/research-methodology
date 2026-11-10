@@ -52,27 +52,16 @@ All in the project's research folder.
 ## 3. The pipeline per study
 
 ```
-proposal (Opus) -> researchers a, b, c (Sonnet, parallel) -> writer (Opus) -> fact-check (fresh Opus)
+proposal (Opus) -> researchers a, b, c (Sonnet, parallel) -> writer (Opus) -> verify_study.py gate
+               -> patch-only fact-check (fresh Opus, Edit-only) -> verify_study.py --strict
                -> questions to questions.md -> update dependent proposals -> follow-up proposals
 ```
 
-- **Proposal.** Written from `PROPOSAL_TEMPLATE.md` at the right level (`PROPOSAL_LEVELS.md`). Split
-  the research into 2-4 independent parts (a, b, c, ...) so researchers can run in parallel; a part
-  that needs another part's result (a probe that needs data) waits for it.
-- **Researchers (Sonnet).** One per part. Each writes `sources/<letter>-<topic>.md` and returns one
-  line. Prefer primary sources; mark snippet-only claims "(snippet)". A part may be a probe or a
-  small simulation instead of web research.
-- **Writer (Opus).** Reads the proposal, the source notes and the prior studies it builds on;
-  writes `README.md` (full frontmatter), any decision tables, and adds the study's owner decisions
-  to `questions.md`.
-- **Fact-check (fresh Opus).** Checks every headline number and at least 25 other claims against
-  the sources (and the primary source for headline and surprising claims); fixes errors in place;
-  adds a `## Fact-check` section with claims checked and changed. Quality guard (from the global
-  `CLAUDE.md`): if more than 10% of checked claims change, or a headline number was wrong, redo that
-  area's gathering on Opus, unless the errors were in the writer's own reading (then the checker's
-  fixes stand; say so in the study).
-- **Complete** only after the fact-check. Then: mark it complete in `research_proposals/README.md`,
-  add a row to `INDEX.md`, log it (section 4).
+- **Proposal.** Written from `PROPOSAL_TEMPLATE.md` at the right level (`PROPOSAL_LEVELS.md`), tagging subquestions `[context]`, `[finding]`, or `[decision]`. Run `python3 scripts/find_prior.py --complete-only --file <proposal>` so unverified drafts are excluded. Split the research into 2-4 independent parts (a, b, c, ...) so researchers can run in parallel; a part that needs another part's result (a probe that needs data) waits for it.
+- **Researchers (Sonnet).** One per part. Each writes `sources/<letter>-<topic>.md` (tagging extracted sources `[RCS: 0-10, Primary/Secondary]` and including exact `[Label](URL) — accessed YYYY-MM-DD` citations + verbatim quotes) and returns one line. Prefer primary sources; mark snippet-only claims `(snippet)` and multi-model agreement without a fetched URL `(unverified — consensus only)`. Multiple secondary posts summarizing the same upstream paper count as 1 source (`independence_group`). A part may be a probe or a small simulation instead of web research.
+- **Writer (Opus).** Reads the proposal, the source notes and the prior studies it builds on; writes `README.md` (full frontmatter, answer-first under ~3,500 words, explicit unresolved uncertainties in `## Known Gaps`, `## Self-check`, `## Sources`), any decision tables, and adds the study's owner decisions to `questions.md`.
+- **Mechanical gate (`scripts/verify_study.py`) + Patch-only Fact-check (fresh Opus).** First run `python3 scripts/verify_study.py <study-dir>` to catch missing frontmatter keys, ghost URLs not in `sources/*.md`, untraced numbers, or uncited factual paragraphs. Next, a fresh checker checks every headline number, every `[decision]` claim, and at least 25 other claims against `sources/*.md` (and the primary source for `[decision]`, headline, and surprising claims); fixes errors in place using **surgical `Edit` calls only ("Patch, Never Regenerate" — never full-file `Write`)**; adds a `## Fact-check` section with claims checked, claims changed, and the `verify_study.py` composite gate score. Quality guard (from the global `CLAUDE.md`): if more than 10% of checked claims change, or a headline number was wrong, redo that area's gathering on Opus, unless the errors were in the writer's own reading (then the checker's fixes stand; say so in the study).
+- **Complete** only after both the fact-check and `python3 scripts/verify_study.py --strict <study-dir>` pass. Then: mark it complete in `research_proposals/README.md`, add a row to `INDEX.md`, log it (section 4).
 
 ## 4. Running the queue
 
